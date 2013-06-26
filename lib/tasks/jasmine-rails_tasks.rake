@@ -24,10 +24,12 @@ namespace :spec do
     html = app.response.body
     runner_path = Rails.root.join('spec/tmp/runner.html')
     File.open(runner_path, 'w') {|f| f << html.gsub('/assets', './assets')}
+    phantom_runner_path = File.exists?(Rails.root.join('lib/tasks/runner.js')) ? Rails.root.join('lib/tasks/') : File.dirname(__FILE__)
 
-    run_cmd %{phantomjs "#{File.join(File.dirname(__FILE__), 'runner.js')}" "file://#{runner_path.to_s}?spec=#{spec_filter}"}
+    run_cmd %{phantomjs "#{File.join(phantom_runner_path, 'runner.js')}" "file://#{runner_path.to_s}?spec=#{spec_filter}"}
   end
 
   # alias
   task :javascripts => :javascript
 end
+
